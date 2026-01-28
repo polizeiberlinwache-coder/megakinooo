@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<title>Serien - MEGAKino Streaming</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#ff6b35">
+	<link rel="shortcut icon" href="/templates/popcornie-dark/images/favicon.svg">
+	<link href="/templates/popcornie-dark/css/common.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/styles.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/engine.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/fontawesome.css" type="text/css" rel="stylesheet">
+	<link href="/css/megakino.css" type="text/css" rel="stylesheet">
+	<style>
+		:root {
+			--accent: #ff6b35;
+			--accent-2: #ffb84d;
+			--bg: #0a0a0a;
+			--bg-2: #1a1a1a;
+			--bg-3: #2d2d2d;
+			--bg-4: #3a3a3a;
+			--tt-dark: #e0e0e0;
+			--tt-2: #a0a0a0;
+			--tt-light: #707070;
+			--bdc-dark: #4a4a4a;
+			--gradient: linear-gradient(90deg, #ff6b35 0%, #ffb84d 100%);
+			--max-width: 1200px;
+			--indent: 30px;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font-family: 'Manrope', sans-serif; background: #0a0a0a; color: #e0e0e0; }
+		a { color: inherit; text-decoration: none; transition: 0.3s; }
+		a:hover { color: #ff6b35; }
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="wrapper-container wrapper-main d-flex fd-column">
+			<!-- HEADER -->
+			<header class="header d-flex ai-center vw100">
+				<a href="/megakino.html" class="logo header__logo">
+					<div class="logo__title">MEGAKino</div>
+					<p class="logo__caption">Filme & Serien Streaming</p>
+				</a>
+				<ul class="header__menu d-flex flex-grow-1">
+					<li><a href="/"><span class="fal fa-home"></span>Home</a></li>
+					<li><a href="/filme.html"><span class="fal fa-fire-alt"></span>Alle Filme</a></li>
+					<li><a href="/serien.html" class="active"><span class="fal fa-play"></span>Serien</a></li>
+					<li><a href="/dokumentation.html"><span class="fal fa-tv-retro"></span>Dokus</a></li>
+					<li><a href="/watchlist.html"><span class="fal fa-bookmark"></span>Watchlist</a></li>
+				</ul>
+				<div class="header__search-box">
+					<input type="text" id="searchInput" placeholder="Serie suchen...">
+					<button class="btn-icon"><span class="fal fa-search"></span></button>
+				</div>
+			</header>
+
+			<!-- CONTENT -->
+			<div class="content flex-grow-1 cols d-flex">
+				<div class="col-main">
+					<!-- PAGE TITLE -->
+					<section class="page-header">
+						<h1>📺 Beliebte Serien</h1>
+						<p>Entdecke spannende TV-Serien und Episoden-Abenteuer</p>
+					</section>
+
+					<!-- FILTER -->
+					<section class="filter-section">
+						<div class="filter-group">
+							<select id="genreFilter" class="filter-select">
+								<option value="">Alle Genres</option>
+								<option value="drama">🎭 Drama</option>
+								<option value="scifi">🚀 Sci-Fi</option>
+								<option value="fantasy">🪄 Fantasy</option>
+								<option value="comedy">😂 Komödie</option>
+								<option value="thriller">😨 Thriller</option>
+								<option value="horror">👻 Horror</option>
+								<option value="mystery">🔎 Mystery</option>
+							</select>
+							<select id="sortFilter" class="filter-select">
+								<option value="trending">Trending</option>
+								<option value="newest">Neuste zuerst</option>
+								<option value="rating">Nach Bewertung</option>
+								<option value="az">A - Z</option>
+							</select>
+						</div>
+					</section>
+
+					<!-- SERIES GRID -->
+					<section class="content-section">
+						<div class="movie-grid" id="seriesGrid">
+							<!-- DYNAMISCH GEFÜLLT -->
+						</div>
+					</section>
+				</div>
+
+				<!-- SIDEBAR -->
+				<aside class="col-side">
+					<div class="widget">
+						<h3>📊 Top Serien</h3>
+						<ul class="top-list" id="topSeries">
+							<!-- DYNAMISCH GEFÜLLT -->
+						</ul>
+					</div>
+				</aside>
+			</div>
+
+			<!-- FOOTER -->
+			<footer class="footer">
+				<p>&copy; 2026 MEGAKino. | <a href="#privacy">Datenschutz</a> | <a href="#terms">Nutzungsbedingungen</a></p>
+			</footer>
+		</div>
+	</div>
+
+	<!-- MODALS -->
+	<div id="movieModal" class="modal">
+		<div class="modal-content">
+			<button class="modal-close">&times;</button>
+			<div class="modal-body" id="modalBody"></div>
+		</div>
+	</div>
+
+	<div id="playerModal" class="modal">
+		<div class="modal-player">
+			<button class="modal-close">&times;</button>
+			<div class="player-container" id="playerContainer"></div>
+			<div class="player-controls">
+				<h3 id="playerTitle"></h3>
+				<p id="playerDescription"></p>
+			</div>
+		</div>
+	</div>
+
+	<script src="/js/megakino-db.js"></script>
+	<script>
+		// Serien daten
+		const SERIES_DATA = [
+			{
+				id: 101,
+				title: "Breaking Bad",
+				year: 2008,
+				genres: ["Drama", "Thriller"],
+				rating: 9.5,
+				image: "https://via.placeholder.com/180x270?text=Breaking+Bad&bg=ff6b35&fg=fff",
+				description: "Ein Chemielehrer wird zum Drogenbaron.",
+				cast: "Bryan Cranston, Aaron Paul",
+				director: "Vince Gilligan",
+				rating_count: 120000,
+				type: "series",
+				seasons: 5,
+				episodes: 62,
+				googleDriveId: "",
+				videoUrl: "https://www.youtube.com/embed/example1",
+				tagline: "Transformation of a Man"
+			},
+			{
+				id: 102,
+				title: "Game of Thrones",
+				year: 2011,
+				genres: ["Drama", "Fantasy"],
+				rating: 9.3,
+				image: "https://via.placeholder.com/180x270?text=GoT&bg=ffb84d&fg=000",
+				description: "Mehrere Adelshäuser kämpfen um den Eisernen Thron.",
+				cast: "Kit Harington, Emilia Clarke, Lena Headey",
+				director: "David Benioff, D.B. Weiss",
+				rating_count: 145000,
+				type: "series",
+				seasons: 8,
+				episodes: 73,
+				googleDriveId: "",
+				videoUrl: "https://www.youtube.com/embed/example2",
+				tagline: "Winter is Coming"
+			},
+			{
+				id: 103,
+				title: "Stranger Things",
+				year: 2016,
+				genres: ["Drama", "Fantasy", "Horror"],
+				rating: 8.7,
+				image: "https://via.placeholder.com/180x270?text=Stranger+Things&bg=ff6b35&fg=fff",
+				description: "Ein Junge verschwindet und seltsame Experimente kommen ans Licht.",
+				cast: "Winona Ryder, David Harbour",
+				director: "The Duffer Brothers",
+				rating_count: 98000,
+				type: "series",
+				seasons: 4,
+				episodes: 42,
+				googleDriveId: "",
+				videoUrl: "https://www.youtube.com/embed/example3",
+				tagline: "From Russia with Demogorgon"
+			},
+			{
+				id: 104,
+				title: "The Crown",
+				year: 2016,
+				genres: ["Drama", "Biography"],
+				rating: 8.6,
+				image: "https://via.placeholder.com/180x270?text=The+Crown&bg=ffb84d&fg=000",
+				description: "Die Geschichte der britischen Königin Elizabeth II.",
+				cast: "Claire Foy, Olivia Colman",
+				director: "Peter Morgan",
+				rating_count: 87000,
+				type: "series",
+				seasons: 5,
+				episodes: 50,
+				googleDriveId: "",
+				videoUrl: "https://www.youtube.com/embed/example4",
+				tagline: "Glory and Duty"
+			},
+			{
+				id: 105,
+				title: "The Mandalorian",
+				year: 2019,
+				genres: ["Sci-Fi", "Adventure"],
+				rating: 8.7,
+				image: "https://via.placeholder.com/180x270?text=Mandalorian&bg=ff6b35&fg=fff",
+				description: "Ein Kopfgeldjäger durchreist die Galaxie.",
+				cast: "Pedro Pascal",
+				director: "Various",
+				rating_count: 94000,
+				type: "series",
+				seasons: 3,
+				episodes: 24,
+				googleDriveId: "",
+				videoUrl: "https://www.youtube.com/embed/example5",
+				tagline: "This is the Way"
+			},
+			{
+				id: 106,
+				title: "Sherlock",
+				year: 2010,
+				genres: ["Mystery", "Drama"],
+				rating: 9.1,
+				image: "https://via.placeholder.com/180x270?text=Sherlock&bg=ffb84d&fg=000",
+				description: "Ein moderner Sherlock Holmes löst Fälle in London.",
+				cast: "Benedict Cumberbatch, Martin Freeman",
+				director: "Mark Gatiss",
+				rating_count: 76000,
+				type: "series",
+				seasons: 4,
+				episodes: 13,
+				googleDriveId: "",
+				videoUrl: "https://www.youtube.com/embed/example6",
+				tagline: "A Study in Modern Crime"
+			}
+		];
+
+		// DOM Elements
+		const seriesGrid = document.getElementById('seriesGrid');
+		const genreFilter = document.getElementById('genreFilter');
+		const sortFilter = document.getElementById('sortFilter');
+		const searchInput = document.getElementById('searchInput');
+		const movieModal = document.getElementById('movieModal');
+		const playerModal = document.getElementById('playerModal');
+		const modalClose = document.querySelectorAll('.modal-close');
+
+		let filteredSeries = [...SERIES_DATA];
+
+		// Initialize
+		document.addEventListener('DOMContentLoaded', () => {
+			renderSeries(filteredSeries);
+			updateSidebar();
+			setupEventListeners();
+		});
+
+		// Event Listeners
+		function setupEventListeners() {
+			genreFilter.addEventListener('change', applyFilters);
+			sortFilter.addEventListener('change', applySort);
+			searchInput.addEventListener('input', handleSearch);
+
+			modalClose.forEach(btn => {
+				btn.addEventListener('click', closeModal);
+			});
+
+			document.addEventListener('click', (e) => {
+				if (e.target.id === 'movieModal' || e.target.id === 'playerModal') {
+					closeModal();
+				}
+			});
+
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') closeModal();
+			});
+		}
+
+		// Render Series
+		function renderSeries(series) {
+			seriesGrid.innerHTML = '';
+
+			if (series.length === 0) {
+				seriesGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #a0a0a0; padding: 60px;">🔍 Keine Serien gefunden</div>`;
+				return;
+			}
+
+			series.forEach(s => {
+				const card = document.createElement('div');
+				card.className = 'movie-card';
+				card.innerHTML = `
+					<div class="movie-poster">
+						<img src="${s.image}" alt="${s.title}">
+						<div class="movie-overlay">
+							<button class="btn-play" onclick="playSeries(${s.id}); return false;">
+								<span class="fal fa-play"></span> Ansehen
+							</button>
+						</div>
+						<div class="movie-year-badge">${s.seasons} St. | ${s.episodes} Eps</div>
+					</div>
+					<div class="movie-info">
+						<div class="movie-title">${s.title}</div>
+						<div class="movie-rating" style="color: #ffb84d;">⭐ ${s.rating}</div>
+						<div class="movie-meta">
+							${s.genres.slice(0, 2).map(g => `<span class="movie-genre">${g}</span>`).join('')}
+						</div>
+					</div>
+				`;
+
+				card.addEventListener('click', (e) => {
+					if (!e.target.closest('.btn-play')) {
+						showSeriesDetails(s.id);
+					}
+				});
+
+				seriesGrid.appendChild(card);
+			});
+		}
+
+		// Show Series Details
+		function showSeriesDetails(id) {
+			const series = SERIES_DATA.find(s => s.id === id);
+			if (!series) return;
+
+			const modalBody = document.getElementById('modalBody');
+			modalBody.innerHTML = `
+				<div class="modal-header">
+					<div class="modal-poster">
+						<img src="${series.image}" alt="${series.title}">
+					</div>
+					<div class="modal-info">
+						<h2 class="modal-title">${series.title}</h2>
+						<div class="modal-meta">
+							<span>📅 ab ${series.year}</span>
+							<span>⭐ ${series.rating}</span>
+							<span>📺 ${series.seasons} Staffeln, ${series.episodes} Episoden</span>
+						</div>
+						<p class="modal-description">${series.description}</p>
+						<p style="color: #a0a0a0; font-size: 12px; margin-bottom: 15px;">
+							<strong>Mit:</strong> ${series.cast}
+						</p>
+						<div class="modal-buttons">
+							<button class="btn-play" onclick="playSeries(${series.id}); return false;">
+								<span class="fal fa-play"></span> Jetzt ansehen
+							</button>
+						</div>
+					</div>
+				</div>
+			`;
+
+			movieModal.classList.add('active');
+		}
+
+		// Play Series
+		function playSeries(id) {
+			const series = SERIES_DATA.find(s => s.id === id);
+			if (!series) return;
+
+			document.getElementById('playerTitle').textContent = series.title;
+			document.getElementById('playerDescription').textContent = series.description;
+
+			const playerContainer = document.getElementById('playerContainer');
+			playerContainer.innerHTML = `
+				<iframe src="${series.videoUrl}" 
+					width="100%" height="600" allow="autoplay; encrypted-media" 
+					frameborder="0" allowfullscreen style="border-radius: 8px; display: block;">
+				</iframe>
+			`;
+
+			playerModal.classList.add('active');
+			movieModal.classList.remove('active');
+		}
+
+		// Filter & Sort
+		function applyFilters() {
+			const genre = genreFilter.value.toLowerCase();
+			filteredSeries = SERIES_DATA.filter(s =>
+				!genre || s.genres.some(g => g.toLowerCase() === genre)
+			);
+			applySort();
+		}
+
+		function applySort() {
+			const sortBy = sortFilter.value || 'trending';
+			let sorted = [...filteredSeries];
+
+			if (sortBy === 'rating') {
+				sorted.sort((a, b) => b.rating - a.rating);
+			} else if (sortBy === 'newest') {
+				sorted.sort((a, b) => b.year - a.year);
+			} else if (sortBy === 'az') {
+				sorted.sort((a, b) => a.title.localeCompare(b.title));
+			} else {
+				sorted.sort((a, b) => b.rating_count - a.rating_count);
+			}
+
+			renderSeries(sorted);
+		}
+
+		// Search
+		function handleSearch(e) {
+			const query = e.target.value.toLowerCase();
+			if (query === '') {
+				applyFilters();
+				return;
+			}
+
+			filteredSeries = SERIES_DATA.filter(s =>
+				s.title.toLowerCase().includes(query) ||
+				s.cast.toLowerCase().includes(query) ||
+				s.genres.some(g => g.toLowerCase().includes(query))
+			);
+
+			applySort();
+		}
+
+		// Update Sidebar
+		function updateSidebar() {
+			const topSeries = [...SERIES_DATA].sort((a, b) => b.rating - a.rating).slice(0, 8);
+			document.getElementById('topSeries').innerHTML = topSeries.map(s =>
+				`<li><a href="#" onclick="showSeriesDetails(${s.id}); return false;">
+					${s.title} <span style="float: right; color: #ffb84d;">⭐${s.rating}</span>
+				</a></li>`
+			).join('');
+		}
+
+		// Close Modals
+		function closeModal() {
+			movieModal.classList.remove('active');
+			playerModal.classList.remove('active');
+		}
+	</script>
+</body>
+</html>

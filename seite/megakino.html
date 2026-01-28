@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<title>MEGAKino - Kostenlose Filme und Serien in HD anschauen</title>
+	<meta name="description" content="MEGAKino – Das ultimative Streaming-Portal für Filme und Serien! Tausende Blockbuster in HD. Jetzt kostenlos anschauen.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#ff6b35">
+	<link rel="shortcut icon" href="/templates/popcornie-dark/images/favicon.svg">
+	<link href="/templates/popcornie-dark/css/fontawesome.css" type="text/css" rel="stylesheet">
+	<style>
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+
+		:root {
+			--primary: #ff6b35;
+			--secondary: #ffb84d;
+			--dark: #0a0a0a;
+			--dark-2: #1a1a1a;
+			--dark-3: #2d2d2d;
+			--dark-4: #3a3a3a;
+			--text: #e0e0e0;
+			--text-2: #a0a0a0;
+			--border: #4a4a4a;
+		}
+
+		html, body { width: 100%; height: 100%; }
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background: var(--dark);
+			color: var(--text);
+			line-height: 1.6;
+		}
+
+		a { color: inherit; text-decoration: none; }
+		a:hover { color: var(--primary); }
+
+		/* HEADER */
+		header {
+			background: var(--dark-2);
+			border-bottom: 1px solid var(--border);
+			padding: 15px 30px;
+			position: sticky;
+			top: 0;
+			z-index: 100;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 20px;
+		}
+
+		.logo {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			font-weight: bold;
+			font-size: 20px;
+		}
+
+		.logo span { color: var(--primary); font-size: 24px; }
+
+		.search-box {
+			flex: 1;
+			max-width: 400px;
+			display: flex;
+			background: var(--dark-3);
+			border: 1px solid var(--border);
+			border-radius: 5px;
+			overflow: hidden;
+		}
+
+		.search-box input {
+			flex: 1;
+			background: none;
+			border: none;
+			color: var(--text);
+			padding: 10px 15px;
+			outline: none;
+		}
+
+		.search-box input::placeholder { color: var(--text-2); }
+		.search-box button {
+			background: none;
+			border: none;
+			color: var(--text-2);
+			padding: 10px 15px;
+			cursor: pointer;
+			transition: 0.3s;
+		}
+
+		.search-box button:hover { color: var(--primary); }
+
+		nav {
+			display: flex;
+			gap: 30px;
+			margin-left: auto;
+		}
+
+		nav a {
+			color: var(--text);
+			transition: 0.3s;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		nav a:hover { color: var(--primary); }
+
+		/* CONTAINER */
+		.container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+		/* HERO SECTION */
+		.hero {
+			background: linear-gradient(135deg, var(--dark-3), var(--dark));
+			padding: 40px 0;
+			margin-bottom: 40px;
+			border-bottom: 1px solid var(--border);
+		}
+
+		.hero-content {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 40px;
+			align-items: center;
+		}
+
+		.hero-text h1 {
+			font-size: 36px;
+			margin-bottom: 15px;
+			color: var(--text);
+		}
+
+		.hero-text h1 .highlight { color: var(--primary); }
+
+		.hero-text p {
+			color: var(--text-2);
+			margin-bottom: 20px;
+			line-height: 1.8;
+		}
+
+		.hero-buttons {
+			display: flex;
+			gap: 15px;
+		}
+
+		.btn {
+			padding: 12px 30px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 14px;
+			font-weight: 600;
+			transition: 0.3s;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.btn-primary {
+			background: linear-gradient(90deg, var(--primary), var(--secondary));
+			color: #000;
+		}
+
+		.btn-primary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+		}
+
+		.btn-secondary {
+			background: transparent;
+			border: 1px solid var(--border);
+			color: var(--text);
+		}
+
+		.btn-secondary:hover {
+			border-color: var(--primary);
+			color: var(--primary);
+		}
+
+		.hero-poster {
+			text-align: right;
+		}
+
+		.poster-card {
+			position: relative;
+			width: 220px;
+			height: 330px;
+			margin-left: auto;
+			border-radius: 10px;
+			overflow: hidden;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+		}
+
+		.poster-card img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.poster-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.3);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: 0;
+			transition: 0.3s;
+		}
+
+		.poster-card:hover .poster-overlay { opacity: 1; }
+
+		.poster-overlay .btn { padding: 10px 20px; font-size: 12px; }
+
+		/* SECTION */
+		section {
+			margin-bottom: 50px;
+		}
+
+		section h2 {
+			font-size: 22px;
+			margin-bottom: 25px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		section h2 .count {
+			background: var(--primary);
+			color: #000;
+			padding: 2px 10px;
+			border-radius: 20px;
+			font-size: 12px;
+			font-weight: bold;
+		}
+
+		/* MOVIE GRID */
+		.movie-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+			gap: 20px;
+		}
+
+		.movie-card {
+			position: relative;
+			border-radius: 8px;
+			overflow: hidden;
+			cursor: pointer;
+			transition: 0.3s;
+			background: var(--dark-3);
+		}
+
+		.movie-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+		}
+
+		.movie-card img {
+			width: 100%;
+			height: 240px;
+			object-fit: cover;
+			display: block;
+		}
+
+		.movie-info {
+			padding: 12px;
+			background: var(--dark-3);
+		}
+
+		.movie-title {
+			font-size: 13px;
+			font-weight: 600;
+			margin-bottom: 5px;
+			line-height: 1.3;
+			color: var(--text);
+		}
+
+		.movie-meta {
+			font-size: 11px;
+			color: var(--text-2);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.movie-rating {
+			background: var(--primary);
+			color: #000;
+			padding: 2px 8px;
+			border-radius: 3px;
+			font-weight: bold;
+			font-size: 12px;
+		}
+
+		.movie-card-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.7);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: 0;
+			transition: 0.3s;
+		}
+
+		.movie-card:hover .movie-card-overlay { opacity: 1; }
+
+		.movie-card-overlay button {
+			background: var(--primary);
+			color: #000;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			font-weight: bold;
+			transition: 0.3s;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.movie-card-overlay button:hover {
+			transform: scale(1.05);
+			box-shadow: 0 5px 15px rgba(255, 107, 53, 0.5);
+		}
+
+		/* PAGINATION */
+		.pagination {
+			display: flex;
+			justify-content: center;
+			gap: 10px;
+			margin: 40px 0;
+		}
+
+		.pagination a, .pagination span {
+			padding: 8px 12px;
+			border: 1px solid var(--border);
+			border-radius: 5px;
+			color: var(--text);
+			cursor: pointer;
+			transition: 0.3s;
+		}
+
+		.pagination a:hover {
+			background: var(--primary);
+			color: #000;
+			border-color: var(--primary);
+		}
+
+		.pagination .active {
+			background: var(--primary);
+			color: #000;
+			border-color: var(--primary);
+		}
+
+		/* MODAL */
+		.modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.8);
+			z-index: 1000;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.modal.active { display: flex; }
+
+		.modal-content {
+			background: var(--dark-2);
+			border-radius: 10px;
+			max-width: 600px;
+			width: 90%;
+			max-height: 80vh;
+			overflow-y: auto;
+			position: relative;
+			border: 1px solid var(--border);
+		}
+
+		.modal-close {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			background: none;
+			border: none;
+			color: var(--text);
+			font-size: 28px;
+			cursor: pointer;
+			z-index: 10;
+		}
+
+		.modal-close:hover { color: var(--primary); }
+
+		.modal-header {
+			display: grid;
+			grid-template-columns: 150px 1fr;
+			gap: 20px;
+			padding: 20px;
+			border-bottom: 1px solid var(--border);
+		}
+
+		.modal-poster img {
+			width: 100%;
+			border-radius: 8px;
+		}
+
+		.modal-info h2 {
+			font-size: 20px;
+			margin-bottom: 10px;
+		}
+
+		.modal-meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-bottom: 15px;
+			font-size: 12px;
+		}
+
+		.modal-meta span {
+			background: var(--dark-3);
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+
+		.modal-description {
+			font-size: 13px;
+			color: var(--text-2);
+			line-height: 1.6;
+			margin-bottom: 15px;
+		}
+
+		.modal-buttons {
+			display: flex;
+			gap: 10px;
+		}
+
+		.modal-buttons .btn { padding: 10px 20px; font-size: 12px; flex: 1; }
+
+		/* FOOTER */
+		footer {
+			background: var(--dark-2);
+			border-top: 1px solid var(--border);
+			padding: 40px 0;
+			margin-top: 60px;
+		}
+
+		.footer-content {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 30px;
+			margin-bottom: 30px;
+		}
+
+		.footer-section h3 {
+			color: var(--primary);
+			margin-bottom: 15px;
+			font-size: 14px;
+		}
+
+		.footer-section ul {
+			list-style: none;
+		}
+
+		.footer-section ul li {
+			margin-bottom: 8px;
+			font-size: 12px;
+		}
+
+		.footer-section ul a { color: var(--text-2); }
+		.footer-section ul a:hover { color: var(--primary); }
+
+		.footer-bottom {
+			text-align: center;
+			font-size: 12px;
+			color: var(--text-2);
+			padding-top: 20px;
+			border-top: 1px solid var(--border);
+		}
+
+		/* PLAYER MODAL */
+		.player-modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.95);
+			z-index: 1001;
+			display: none;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.player-modal.active { display: flex; }
+
+		.player-wrapper {
+			position: relative;
+			width: 90%;
+			max-width: 1000px;
+			aspect-ratio: 16 / 9;
+		}
+
+		.player-container {
+			width: 100%;
+			height: 100%;
+			border-radius: 10px;
+			overflow: hidden;
+			background: #000;
+		}
+
+		.player-container video,
+		.player-container iframe {
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+
+		.player-controls-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			padding: 20px;
+			opacity: 0;
+			transition: opacity 0.3s;
+			pointer-events: none;
+		}
+
+		.player-wrapper:hover .player-controls-overlay {
+			opacity: 1;
+			pointer-events: all;
+		}
+
+		.player-close, .player-fullscreen {
+			background: var(--primary);
+			border: none;
+			color: #000;
+			font-size: 18px;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			cursor: pointer;
+			transition: 0.3s;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.player-close:hover, .player-fullscreen:hover { 
+			transform: scale(1.1);
+			box-shadow: 0 5px 15px rgba(255, 107, 53, 0.5);
+		}
+
+		/* FULLSCREEN */
+		.player-modal.fullscreen {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			width: 100vw;
+			height: 100vh;
+			z-index: 9999;
+		}
+
+		.player-modal.fullscreen .player-wrapper {
+			width: 100%;
+			max-width: 100%;
+			aspect-ratio: auto;
+		}
+
+		.player-modal.fullscreen .player-container {
+			width: 100%;
+			height: 100%;
+			border-radius: 0;
+		}
+
+		/* RESPONSIVE */
+		@media (max-width: 768px) {
+			header {
+				flex-direction: column;
+				gap: 15px;
+			}
+
+			nav {
+				width: 100%;
+				margin-left: 0;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 15px;
+			}
+
+			.search-box {
+				max-width: 100%;
+			}
+
+			.hero-content {
+				grid-template-columns: 1fr;
+			}
+
+			.hero-poster { text-align: center; }
+			.poster-card { margin: 0 auto; }
+
+			.hero-text h1 { font-size: 24px; }
+
+			.movie-grid {
+				grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+				gap: 15px;
+			}
+
+			.modal-header {
+				grid-template-columns: 100px 1fr;
+				gap: 15px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.container { padding: 0 10px; }
+			header { padding: 10px 15px; }
+			.logo { font-size: 16px; }
+			nav { gap: 10px; }
+			section h2 { font-size: 18px; }
+			.movie-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+			.hero-text h1 { font-size: 18px; }
+		}
+	</style>
+</head>
+<body>
+	<!-- HEADER -->
+	<header>
+		<a href="/megakino.html" class="logo">
+			<span class="fal fa-play"></span>
+			<div>MEGAKINO</div>
+		</a>
+		<div class="search-box">
+			<input type="text" id="searchInput" placeholder="Suche nach Filmen...">
+			<button><span class="fal fa-search"></span></button>
+		</div>
+		<nav>
+			<a href="/megakino.html"><span class="fal fa-home"></span>Home</a>
+			<a href="/filme.html"><span class="fal fa-fire"></span>Alle Filme</a>
+			<a href="/watchlist.html"><span class="fal fa-bookmark"></span>Watchlist</a>
+		</nav>
+	</header>
+
+	<!-- MAIN -->
+	<main>
+		<!-- HERO -->
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<div class="hero-text">
+						<h1>Willkommen bei <span class="highlight">MEGAKINO</span></h1>
+						<p>Tausende Filme und Serien kostenlos in HD-Qualität. Premium-Content ohne Werbung. Jetzt anschauen und genießen!</p>
+						<div class="hero-buttons">
+							<button class="btn btn-primary">
+								<span class="fal fa-play"></span> Jetzt starten
+							</button>
+							<button class="btn btn-secondary">
+								<span class="fal fa-info-circle"></span> Mehr Infos
+							</button>
+						</div>
+					</div>
+					<div class="hero-poster">
+						<a href="/werwolfe-duesterwald.html" class="poster-card" id="heroPosterLink">
+							<img id="heroPoster" src="cover/Wald.jpg" alt="Featured">
+							<div class="poster-overlay">
+								<button class="btn btn-primary">
+									<span class="fal fa-play"></span> Abspielen
+								</button>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ZULETZT HINZUGEFÜGT -->
+		<section class="container">
+			<h2>
+				<span class="fal fa-clock"></span>
+				Zuletzt hinzugefügt
+				<span class="count" id="newCount">0</span>
+			</h2>
+			<div class="movie-grid" id="newMoviesGrid"></div>
+		</section>
+
+		<!-- TRENDING JETZT -->
+		<section class="container">
+			<h2>
+				<span class="fal fa-fire"></span>
+				Trending jetzt
+				<span class="count" id="trendingCount">0</span>
+			</h2>
+			<div class="movie-grid" id="trendingGrid"></div>
+		</section>
+
+		<!-- ALLE FILME -->
+		<section class="container">
+			<h2>
+				<span class="fal fa-film"></span>
+				Alle Filme
+				<span class="count" id="allCount">0</span>
+			</h2>
+			<div class="movie-grid" id="allMoviesGrid"></div>
+			<div class="pagination" id="pagination"></div>
+		</section>
+	</main>
+
+	<!-- FOOTER -->
+	<footer>
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>🎬 ÜBER MEGAKINO</h3>
+					<ul>
+						<li><a href="#">Über uns</a></li>
+						<li><a href="#">Kontakt</a></li>
+						<li><a href="#">Blog</a></li>
+						<li><a href="#">Karriere</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h3>📋 HÄUFIGE FRAGEN</h3>
+					<ul>
+						<li><a href="#">Wie funktioniert es?</a></li>
+						<li><a href="#">Geräte & Apps</a></li>
+						<li><a href="#">Abo-Pläne</a></li>
+						<li><a href="#">Hilfe & Support</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h3>⚙️ EINSTELLUNGEN</h3>
+					<ul>
+						<li><a href="#">Datenschutz</a></li>
+						<li><a href="#">Nutzungsbedingungen</a></li>
+						<li><a href="#">Cookie-Einstellungen</a></li>
+						<li><a href="#">Impressum</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h3>📱 FOLGE UNS</h3>
+					<ul>
+						<li><a href="#">Facebook</a></li>
+						<li><a href="#">Twitter</a></li>
+						<li><a href="#">Instagram</a></li>
+						<li><a href="#">YouTube</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<p>&copy; 2026 MEGAKINO. Alle Rechte vorbehalten. | <a href="#">Datenschutz</a> | <a href="#">Nutzungsbedingungen</a></p>
+			</div>
+		</div>
+	</footer>
+
+	<!-- MOVIE DETAILS MODAL -->
+	<div class="modal" id="movieModal">
+		<div class="modal-content">
+			<button class="modal-close" onclick="closeModal()">&times;</button>
+			<div class="modal-header" id="modalBody"></div>
+		</div>
+	</div>
+
+	<!-- VIDEO PLAYER MODAL -->
+	<div class="player-modal" id="playerModal">
+		<div class="player-wrapper">
+			<button class="player-close" onclick="closePlayer()">×</button>
+			<button class="player-fullscreen" onclick="toggleFullscreen()" title="Vollbild">
+				<span class="fal fa-expand"></span>
+			</button>
+			<div class="player-container">
+				<video id="videoPlayer" controls style="display: none;">
+					<source src="" type="video/mp4">
+				</video>
+				<iframe id="drivePlayer" style="display: none;"></iframe>
+				<iframe id="youtubePlayer" style="display: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
+		</div>
+	</div>
+
+	<script src="/js/megakino-db.js"></script>
+	<script>
+		let movies = [...MEGAKINO_MOVIES];
+		let currentPage = 1;
+		const itemsPerPage = 12;
+
+		document.addEventListener('DOMContentLoaded', () => {
+			renderSections();
+			setupSearchListener();
+		});
+
+		function renderSections() {
+			// Neue Filme (nach Jahr sortiert)
+			const newMovies = [...movies].sort((a, b) => b.year - a.year).slice(0, 8);
+			renderMovieGrid('newMoviesGrid', newMovies);
+			document.getElementById('newCount').textContent = newMovies.length;
+
+			// Trending (nach Rating sortiert)
+			const trending = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 8);
+			renderMovieGrid('trendingGrid', trending);
+			document.getElementById('trendingCount').textContent = trending.length;
+
+			// Alle Filme mit Pagination
+			renderAllMovies();
+		}
+
+		function renderAllMovies() {
+			const start = (currentPage - 1) * itemsPerPage;
+			const end = start + itemsPerPage;
+			const paginatedMovies = movies.slice(start, end);
+			
+			renderMovieGrid('allMoviesGrid', paginatedMovies);
+			document.getElementById('allCount').textContent = movies.length;
+			renderPagination();
+		}
+
+		function renderMovieGrid(gridId, movieList) {
+			const grid = document.getElementById(gridId);
+			grid.innerHTML = '';
+
+			movieList.forEach(movie => {
+				const moviePage = getMoviePage(movie.id);
+				const card = document.createElement('a');
+				card.href = moviePage;
+				card.className = 'movie-card';
+				card.style.display = 'block';
+				card.innerHTML = `
+					<img src="${movie.image}" alt="${movie.title}">
+					<div class="movie-card-overlay">
+						<button onclick="event.preventDefault(); playMovieFromId(${movie.id})">
+							<span class="fal fa-play"></span> Abspielen
+						</button>
+					</div>
+					<div class="movie-info">
+						<div class="movie-title">${movie.title}</div>
+						<div class="movie-meta">
+							<span>${movie.year}</span>
+							<span class="movie-rating">⭐${movie.rating}</span>
+						</div>
+					</div>
+				`;
+				grid.appendChild(card);
+			});
+		}
+
+		function getMoviePage(movieId) {
+			if (movieId === 1) return '/werwolfe-duesterwald.html';
+			if (movieId === 2) return '/checkertobi3.html';
+			if (movieId === 3) return '/freddy2.html';
+			return '/megakino.html';
+		}
+
+		function renderPagination() {
+			const totalPages = Math.ceil(movies.length / itemsPerPage);
+			const paginationDiv = document.getElementById('pagination');
+			paginationDiv.innerHTML = '';
+
+			if (totalPages <= 1) return;
+
+			// Previous
+			const prevBtn = document.createElement('a');
+			prevBtn.textContent = '← Zurück';
+			prevBtn.onclick = () => {
+				if (currentPage > 1) {
+					currentPage--;
+					renderAllMovies();
+					window.scrollTo({ top: document.querySelector('section').offsetTop, behavior: 'smooth' });
+				}
+			};
+			prevBtn.style.pointerEvents = currentPage === 1 ? 'none' : 'auto';
+			prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+			paginationDiv.appendChild(prevBtn);
+
+			// Page numbers
+			for (let i = 1; i <= totalPages; i++) {
+				const pageBtn = document.createElement('a');
+				pageBtn.textContent = i;
+				pageBtn.className = i === currentPage ? 'active' : '';
+				pageBtn.onclick = () => {
+					currentPage = i;
+					renderAllMovies();
+					window.scrollTo({ top: document.querySelector('section').offsetTop, behavior: 'smooth' });
+				};
+				paginationDiv.appendChild(pageBtn);
+			}
+
+			// Next
+			const nextBtn = document.createElement('a');
+			nextBtn.textContent = 'Weiter →';
+			nextBtn.onclick = () => {
+				if (currentPage < totalPages) {
+					currentPage++;
+					renderAllMovies();
+					window.scrollTo({ top: document.querySelector('section').offsetTop, behavior: 'smooth' });
+				}
+			};
+			nextBtn.style.pointerEvents = currentPage === totalPages ? 'none' : 'auto';
+			nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
+			paginationDiv.appendChild(nextBtn);
+		}
+
+		function showMovieDetails(movieId) {
+			const movie = movies.find(m => m.id === movieId);
+			if (!movie) return;
+
+			const modalBody = document.getElementById('modalBody');
+			modalBody.innerHTML = `
+				<div class="modal-poster"><img src="${movie.image}" alt="${movie.title}"></div>
+				<div class="modal-info">
+					<h2>${movie.title}</h2>
+					<div class="modal-meta">
+						<span>📅 ${movie.year}</span>
+						<span>⭐ ${movie.rating}</span>
+						<span>🎬 ${movie.type}</span>
+						<span>🎭 ${movie.director}</span>
+					</div>
+					<p class="modal-description">${movie.description}</p>
+					<p class="modal-description"><strong>Mit:</strong> ${movie.cast}</p>
+					<div class="modal-buttons">
+						<button class="btn btn-primary" onclick="playMovieFromId(${movie.id})">
+							<span class="fal fa-play"></span> Abspielen
+						</button>
+						<button class="btn btn-secondary" onclick="toggleWatchlist(${movie.id})">
+							<span class="fal fa-bookmark"></span> Merken
+						</button>
+					</div>
+				</div>
+			`;
+
+			document.getElementById('movieModal').classList.add('active');
+		}
+
+		function playMovieFromId(movieId) {
+			const movie = movies.find(m => m.id === movieId);
+			if (!movie) return;
+
+			addToWatchHistory(movie);
+
+			const videoPlayer = document.getElementById('videoPlayer');
+			const drivePlayer = document.getElementById('drivePlayer');
+			const youtubePlayer = document.getElementById('youtubePlayer');
+
+			videoPlayer.style.display = 'none';
+			drivePlayer.style.display = 'none';
+			youtubePlayer.style.display = 'none';
+
+			if (movie.googleDriveId) {
+				drivePlayer.src = `https://drive.google.com/file/d/${movie.googleDriveId}/preview`;
+				drivePlayer.style.display = 'block';
+			} else if (movie.videoUrl) {
+				youtubePlayer.src = movie.videoUrl;
+				youtubePlayer.style.display = 'block';
+			} else {
+				videoPlayer.style.display = 'block';
+			}
+
+			document.getElementById('movieModal').classList.remove('active');
+			document.getElementById('playerModal').classList.add('active');
+		}
+
+		function closeModal() {
+			document.getElementById('movieModal').classList.remove('active');
+		}
+
+		function closePlayer() {
+			const playerModal = document.getElementById('playerModal');
+			playerModal.classList.remove('active', 'fullscreen');
+			document.getElementById('videoPlayer').pause();
+			document.body.style.overflow = 'auto';
+		}
+
+		function toggleFullscreen() {
+			const playerModal = document.getElementById('playerModal');
+			playerModal.classList.toggle('fullscreen');
+			
+			if (playerModal.classList.contains('fullscreen')) {
+				document.body.style.overflow = 'hidden';
+			} else {
+				document.body.style.overflow = 'auto';
+			}
+		}
+
+		function setupSearchListener() {
+			const searchInput = document.getElementById('searchInput');
+			searchInput.addEventListener('input', (e) => {
+				const query = e.target.value.toLowerCase();
+				if (query === '') {
+					movies = [...MEGAKINO_MOVIES];
+				} else {
+					movies = MEGAKINO_MOVIES.filter(m =>
+						m.title.toLowerCase().includes(query) ||
+						m.description.toLowerCase().includes(query)
+					);
+				}
+				currentPage = 1;
+				renderSections();
+			});
+		}
+
+		function toggleWatchlist(movieId) {
+			const movie = MEGAKINO_MOVIES.find(m => m.id === movieId);
+			if (movie) {
+				window.toggleWatchlist(movie);
+			}
+		}
+
+		// Close modal on background click
+		document.getElementById('movieModal').addEventListener('click', (e) => {
+			if (e.target.id === 'movieModal') closeModal();
+		});
+
+		document.getElementById('playerModal').addEventListener('click', (e) => {
+			if (e.target.id === 'playerModal') closePlayer();
+		});
+
+		// Keyboard shortcuts
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				const playerModal = document.getElementById('playerModal');
+				if (playerModal.classList.contains('fullscreen')) {
+					playerModal.classList.remove('fullscreen');
+					document.body.style.overflow = 'auto';
+				} else {
+					closeModal();
+					closePlayer();
+				}
+			}
+		});
+	</script>
+</body>
+</html>

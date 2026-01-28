@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<title>Meine Watchlist - MEGAKino</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#ff6b35">
+	<link rel="shortcut icon" href="/templates/popcornie-dark/images/favicon.svg">
+	<link href="/templates/popcornie-dark/css/common.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/styles.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/engine.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/fontawesome.css" type="text/css" rel="stylesheet">
+	<link href="/css/megakino.css" type="text/css" rel="stylesheet">
+	<style>
+		:root {
+			--accent: #ff6b35;
+			--accent-2: #ffb84d;
+			--bg: #0a0a0a;
+			--bg-2: #1a1a1a;
+			--bg-3: #2d2d2d;
+			--bg-4: #3a3a3a;
+			--tt-dark: #e0e0e0;
+			--tt-2: #a0a0a0;
+			--tt-light: #707070;
+			--bdc-dark: #4a4a4a;
+			--gradient: linear-gradient(90deg, #ff6b35 0%, #ffb84d 100%);
+			--max-width: 1200px;
+			--indent: 30px;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font-family: 'Manrope', sans-serif; background: #0a0a0a; color: #e0e0e0; }
+		a { color: inherit; text-decoration: none; transition: 0.3s; }
+		a:hover { color: #ff6b35; }
+
+		.watchlist-empty {
+			text-align: center;
+			padding: 80px 30px;
+			background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+			border-radius: 10px;
+			margin-bottom: 40px;
+		}
+
+		.watchlist-empty h2 {
+			font-size: 32px;
+			margin-bottom: 15px;
+			color: #ffb84d;
+		}
+
+		.watchlist-empty p {
+			color: #a0a0a0;
+			font-size: 16px;
+			margin-bottom: 30px;
+			max-width: 500px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.watchlist-empty a {
+			display: inline-block;
+			padding: 12px 30px;
+			background: linear-gradient(90deg, #ff6b35 0%, #ffb84d 100%);
+			color: #fff;
+			border-radius: 25px;
+			font-weight: 600;
+			transition: transform 0.3s;
+		}
+
+		.watchlist-empty a:hover {
+			transform: translateY(-2px);
+		}
+
+		.clear-btn {
+			padding: 10px 20px;
+			background: #2d2d2d;
+			border: 1px solid #ff6b35;
+			color: #ff6b35;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-bottom: 20px;
+			transition: all 0.3s;
+		}
+
+		.clear-btn:hover {
+			background: #ff6b35;
+			color: #fff;
+		}
+
+		.watchlist-stats {
+			display: flex;
+			gap: 20px;
+			margin-bottom: 40px;
+			flex-wrap: wrap;
+		}
+
+		.stat-card {
+			flex: 1;
+			min-width: 150px;
+			background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+			padding: 20px;
+			border-radius: 8px;
+			border-left: 3px solid #ff6b35;
+			text-align: center;
+		}
+
+		.stat-card h3 {
+			color: #ffb84d;
+			font-size: 32px;
+			margin-bottom: 5px;
+		}
+
+		.stat-card p {
+			color: #a0a0a0;
+			font-size: 12px;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="wrapper-container wrapper-main d-flex fd-column">
+			<!-- HEADER -->
+			<header class="header d-flex ai-center vw100">
+				<a href="/megakino.html" class="logo header__logo">
+					<div class="logo__title">MEGAKino</div>
+					<p class="logo__caption">Filme & Serien Streaming</p>
+				</a>
+				<ul class="header__menu d-flex flex-grow-1">
+					<li><a href="/"><span class="fal fa-home"></span>Home</a></li>
+					<li><a href="/filme.html"><span class="fal fa-fire-alt"></span>Alle Filme</a></li>
+					<li><a href="/serien.html"><span class="fal fa-play"></span>Serien</a></li>
+					<li><a href="/dokumentation.html"><span class="fal fa-tv-retro"></span>Dokus</a></li>
+					<li><a href="/watchlist.html" class="active"><span class="fal fa-bookmark"></span>Watchlist</a></li>
+				</ul>
+				<div class="header__search-box">
+					<input type="text" id="searchInput" placeholder="In Watchlist suchen...">
+					<button class="btn-icon"><span class="fal fa-search"></span></button>
+				</div>
+			</header>
+
+			<!-- CONTENT -->
+			<div class="content flex-grow-1 cols d-flex">
+				<div class="col-main">
+					<!-- PAGE TITLE -->
+					<section class="page-header">
+						<h1>💾 Meine Watchlist</h1>
+						<p>Deine persönliche Sammlung von Filmen und Serien zum später ansehen</p>
+					</section>
+
+					<!-- STATS -->
+					<div class="watchlist-stats" id="stats"></div>
+
+					<!-- CLEAR BUTTON -->
+					<button class="clear-btn" onclick="clearWatchlist();">🗑️ Watchlist leeren</button>
+
+					<!-- WATCHLIST GRID -->
+					<section class="content-section">
+						<div class="movie-grid" id="watchlistGrid"></div>
+					</section>
+				</div>
+			</div>
+
+			<!-- FOOTER -->
+			<footer class="footer">
+				<p>&copy; 2026 MEGAKino. | <a href="#privacy">Datenschutz</a> | <a href="#terms">Nutzungsbedingungen</a></p>
+			</footer>
+		</div>
+	</div>
+
+	<!-- MODALS -->
+	<div id="movieModal" class="modal">
+		<div class="modal-content">
+			<button class="modal-close">&times;</button>
+			<div class="modal-body" id="modalBody"></div>
+		</div>
+	</div>
+
+	<div id="playerModal" class="modal">
+		<div class="modal-player">
+			<button class="modal-close">&times;</button>
+			<div class="player-container" id="playerContainer"></div>
+			<div class="player-controls">
+				<h3 id="playerTitle"></h3>
+				<p id="playerDescription"></p>
+			</div>
+		</div>
+	</div>
+
+	<script src="/js/megakino-db.js"></script>
+	<script>
+		const watchlistGrid = document.getElementById('watchlistGrid');
+		const searchInput = document.getElementById('searchInput');
+		const movieModal = document.getElementById('movieModal');
+		const playerModal = document.getElementById('playerModal');
+		const modalClose = document.querySelectorAll('.modal-close');
+		const statsContainer = document.getElementById('stats');
+
+		let filteredWatchlist = [];
+
+		// Initialize
+		document.addEventListener('DOMContentLoaded', () => {
+			loadWatchlist();
+			setupEventListeners();
+		});
+
+		// Event Listeners
+		function setupEventListeners() {
+			searchInput.addEventListener('input', handleSearch);
+
+			modalClose.forEach(btn => {
+				btn.addEventListener('click', closeModal);
+			});
+
+			document.addEventListener('click', (e) => {
+				if (e.target.id === 'movieModal' || e.target.id === 'playerModal') {
+					closeModal();
+				}
+			});
+
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') closeModal();
+			});
+		}
+
+		// Load Watchlist
+		function loadWatchlist() {
+			const watchlist = getWatchlist();
+			filteredWatchlist = [...watchlist];
+
+			if (watchlist.length === 0) {
+				watchlistGrid.innerHTML = `
+					<div class="watchlist-empty" style="grid-column: 1/-1;">
+						<h2>📭 Watchlist ist leer</h2>
+						<p>Du hast noch keine Filme oder Serien zu deiner Watchlist hinzugefügt. Entdecke jetzt Inhalte!</p>
+						<a href="/filme.html">Zu den Filmen</a>
+					</div>
+				`;
+				statsContainer.innerHTML = '';
+				return;
+			}
+
+			// Show stats
+			const totalCount = watchlist.length;
+			const movies = watchlist.filter(item => {
+				const fullMovie = MEGAKINO_MOVIES.find(m => m.id === item.id);
+				return fullMovie && fullMovie.type === 'movie';
+			});
+
+			statsContainer.innerHTML = `
+				<div class="stat-card">
+					<h3>${totalCount}</h3>
+					<p>Einträge insgesamt</p>
+				</div>
+				<div class="stat-card">
+					<h3>${movies.length}</h3>
+					<p>Filme</p>
+				</div>
+				<div class="stat-card">
+					<h3>${totalCount - movies.length}</h3>
+					<p>Serien & Sonstiges</p>
+				</div>
+			`;
+
+			renderWatchlist(watchlist);
+		}
+
+		// Render Watchlist
+		function renderWatchlist(items) {
+			watchlistGrid.innerHTML = '';
+
+			if (items.length === 0) {
+				watchlistGrid.innerHTML = `
+					<div class="watchlist-empty" style="grid-column: 1/-1;">
+						<h2>🔍 Keine Ergebnisse</h2>
+						<p>Deine Suche hat keine Ergebnisse gefunden. Versuche es mit anderen Begriffen.</p>
+					</div>
+				`;
+				return;
+			}
+
+			items.forEach(item => {
+				const fullMovie = MEGAKINO_MOVIES.find(m => m.id === item.id);
+				if (!fullMovie) return;
+
+				const card = document.createElement('div');
+				card.className = 'movie-card';
+				card.innerHTML = `
+					<div class="movie-poster">
+						<img src="${fullMovie.image}" alt="${fullMovie.title}">
+						<div class="movie-overlay">
+							<div style="display: flex; gap: 10px; flex-direction: column;">
+								<button class="btn-play" onclick="playMovie(${fullMovie.id}); return false;" style="flex: 1;">
+									<span class="fal fa-play"></span> Abspielen
+								</button>
+								<button class="btn-play" onclick="removeFromWatchlist(${fullMovie.id}); return false;" style="flex: 1; background: #e55a2b;">
+									<span class="fal fa-trash"></span> Entfernen
+								</button>
+							</div>
+						</div>
+						<div class="movie-year-badge">${fullMovie.year}</div>
+					</div>
+					<div class="movie-info">
+						<div class="movie-title">${fullMovie.title}</div>
+						<div class="movie-rating" style="color: #ffb84d;">⭐ ${fullMovie.rating}</div>
+						<div class="movie-meta">
+							${fullMovie.genres.slice(0, 2).map(g => `<span class="movie-genre">${g}</span>`).join('')}
+						</div>
+					</div>
+				`;
+
+				card.addEventListener('click', (e) => {
+					if (!e.target.closest('button')) {
+						showMovieDetails(fullMovie.id);
+					}
+				});
+
+				watchlistGrid.appendChild(card);
+			});
+		}
+
+		// Show Movie Details
+		function showMovieDetails(movieId) {
+			const movie = MEGAKINO_MOVIES.find(m => m.id === movieId);
+			if (!movie) return;
+
+			const modalBody = document.getElementById('modalBody');
+			modalBody.innerHTML = `
+				<div class="modal-header">
+					<div class="modal-poster">
+						<img src="${movie.image}" alt="${movie.title}">
+					</div>
+					<div class="modal-info">
+						<h2 class="modal-title">${movie.title}</h2>
+						<div class="modal-meta">
+							<span>📅 ${movie.year}</span>
+							<span>⭐ ${movie.rating}</span>
+						</div>
+						<p class="modal-description">${movie.longDescription}</p>
+						<div class="modal-buttons">
+							<button class="btn-play" onclick="playMovie(${movie.id}); return false;">
+								<span class="fal fa-play"></span> Jetzt abspielen
+							</button>
+							<button class="btn-play" onclick="removeFromWatchlist(${movie.id}); return false;" style="background: #e55a2b;">
+								<span class="fal fa-trash"></span> Entfernen
+							</button>
+						</div>
+					</div>
+				</div>
+			`;
+
+			movieModal.classList.add('active');
+		}
+
+		// Play Movie
+		function playMovie(movieId) {
+			const movie = MEGAKINO_MOVIES.find(m => m.id === movieId);
+			if (!movie) return;
+
+			document.getElementById('playerTitle').textContent = movie.title;
+			document.getElementById('playerDescription').textContent = movie.longDescription;
+
+			const playerContainer = document.getElementById('playerContainer');
+
+			if (movie.googleDriveId) {
+				playerContainer.innerHTML = `
+					<iframe src="https://drive.google.com/file/d/${movie.googleDriveId}/preview" 
+						width="100%" height="600" allow="autoplay" style="border-radius: 8px;">
+					</iframe>
+				`;
+			} else if (movie.videoUrl) {
+				playerContainer.innerHTML = `
+					<iframe src="${movie.videoUrl}" 
+						width="100%" height="600" allow="autoplay; encrypted-media" 
+						frameborder="0" allowfullscreen style="border-radius: 8px;">
+					</iframe>
+				`;
+			}
+
+			playerModal.classList.add('active');
+			movieModal.classList.remove('active');
+		}
+
+		// Remove from Watchlist
+		function removeFromWatchlist(movieId) {
+			let watchlist = getWatchlist();
+			watchlist = watchlist.filter(m => m.id !== movieId);
+			saveWatchlist(watchlist);
+			loadWatchlist();
+		}
+
+		// Clear Watchlist
+		function clearWatchlist() {
+			if (confirm('🚨 Soll deine komplette Watchlist wirklich gelöscht werden?')) {
+				saveWatchlist([]);
+				loadWatchlist();
+			}
+		}
+
+		// Search
+		function handleSearch(e) {
+			const query = e.target.value.toLowerCase();
+			const watchlist = getWatchlist();
+
+			if (query === '') {
+				filteredWatchlist = [...watchlist];
+			} else {
+				filteredWatchlist = watchlist.filter(item => {
+					const fullMovie = MEGAKINO_MOVIES.find(m => m.id === item.id);
+					return fullMovie && (
+						fullMovie.title.toLowerCase().includes(query) ||
+						fullMovie.genres.some(g => g.toLowerCase().includes(query))
+					);
+				});
+			}
+
+			renderWatchlist(filteredWatchlist);
+		}
+
+		// Close Modals
+		function closeModal() {
+			movieModal.classList.remove('active');
+			playerModal.classList.remove('active');
+		}
+	</script>
+</body>
+</html>

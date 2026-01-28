@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<title>Dokumentationen - MEGAKino</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#ff6b35">
+	<link rel="shortcut icon" href="/templates/popcornie-dark/images/favicon.svg">
+	<link href="/templates/popcornie-dark/css/common.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/styles.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/engine.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/fontawesome.css" type="text/css" rel="stylesheet">
+	<link href="/css/megakino.css" type="text/css" rel="stylesheet">
+	<style>
+		:root {
+			--accent: #ff6b35;
+			--accent-2: #ffb84d;
+			--bg: #0a0a0a;
+			--bg-2: #1a1a1a;
+			--bg-3: #2d2d2d;
+			--bg-4: #3a3a3a;
+			--tt-dark: #e0e0e0;
+			--tt-2: #a0a0a0;
+			--tt-light: #707070;
+			--bdc-dark: #4a4a4a;
+			--gradient: linear-gradient(90deg, #ff6b35 0%, #ffb84d 100%);
+			--max-width: 1200px;
+			--indent: 30px;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font-family: 'Manrope', sans-serif; background: #0a0a0a; color: #e0e0e0; }
+		a { color: inherit; text-decoration: none; transition: 0.3s; }
+		a:hover { color: #ff6b35; }
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="wrapper-container wrapper-main d-flex fd-column">
+			<!-- HEADER -->
+			<header class="header d-flex ai-center vw100">
+				<a href="/megakino.html" class="logo header__logo">
+					<div class="logo__title">MEGAKino</div>
+					<p class="logo__caption">Filme & Serien Streaming</p>
+				</a>
+				<ul class="header__menu d-flex flex-grow-1">
+					<li><a href="/"><span class="fal fa-home"></span>Home</a></li>
+					<li><a href="/filme.html"><span class="fal fa-fire-alt"></span>Alle Filme</a></li>
+					<li><a href="/serien.html"><span class="fal fa-play"></span>Serien</a></li>
+					<li><a href="/dokumentation.html" class="active"><span class="fal fa-tv-retro"></span>Dokus</a></li>
+					<li><a href="/watchlist.html"><span class="fal fa-bookmark"></span>Watchlist</a></li>
+				</ul>
+				<div class="header__search-box">
+					<input type="text" id="searchInput" placeholder="Dokumentation suchen...">
+					<button class="btn-icon"><span class="fal fa-search"></span></button>
+				</div>
+			</header>
+
+			<!-- CONTENT -->
+			<div class="content flex-grow-1 cols d-flex">
+				<div class="col-main">
+					<!-- PAGE TITLE -->
+					<section class="page-header">
+						<h1>🎥 Dokumentationen</h1>
+						<p>Entdecke faszinierende Dokumentationen über die Welt</p>
+					</section>
+
+					<!-- FILTER -->
+					<section class="filter-section">
+						<div class="filter-group">
+							<select id="categoryFilter" class="filter-select">
+								<option value="">Alle Kategorien</option>
+								<option value="nature">🌍 Natur</option>
+								<option value="history">📚 Geschichte</option>
+								<option value="science">🔬 Wissenschaft</option>
+								<option value="biography">👤 Biographie</option>
+								<option value="crime">🚔 Verbrechen</option>
+								<option value="technology">💻 Technologie</option>
+								<option value="travel">✈️ Reisen</option>
+								<option value="culture">🎭 Kultur</option>
+							</select>
+							<select id="sortFilter" class="filter-select">
+								<option value="trending">Trending</option>
+								<option value="newest">Neuste zuerst</option>
+								<option value="rating">Nach Bewertung</option>
+								<option value="az">A - Z</option>
+							</select>
+						</div>
+					</section>
+
+					<!-- DOCS GRID -->
+					<section class="content-section">
+						<div class="movie-grid" id="docsGrid">
+							<!-- DYNAMISCH GEFÜLLT -->
+						</div>
+					</section>
+				</div>
+
+				<!-- SIDEBAR -->
+				<aside class="col-side">
+					<div class="widget">
+						<h3>📊 Top Dokumentationen</h3>
+						<ul class="top-list" id="topDocs">
+							<!-- DYNAMISCH GEFÜLLT -->
+						</ul>
+					</div>
+				</aside>
+			</div>
+
+			<!-- FOOTER -->
+			<footer class="footer">
+				<p>&copy; 2026 MEGAKino. | <a href="#privacy">Datenschutz</a> | <a href="#terms">Nutzungsbedingungen</a></p>
+			</footer>
+		</div>
+	</div>
+
+	<!-- MODALS -->
+	<div id="movieModal" class="modal">
+		<div class="modal-content">
+			<button class="modal-close">&times;</button>
+			<div class="modal-body" id="modalBody"></div>
+		</div>
+	</div>
+
+	<div id="playerModal" class="modal">
+		<div class="modal-player">
+			<button class="modal-close">&times;</button>
+			<div class="player-container" id="playerContainer"></div>
+			<div class="player-controls">
+				<h3 id="playerTitle"></h3>
+				<p id="playerDescription"></p>
+			</div>
+		</div>
+	</div>
+
+	<script src="/js/megakino-db.js"></script>
+	<script>
+		// Dokumentations-Daten
+		const DOCS_DATA = [
+			{
+				id: 201,
+				title: "Planet Earth",
+				year: 2006,
+				category: "nature",
+				rating: 9.4,
+				image: "https://via.placeholder.com/180x270?text=Planet+Earth&bg=ff6b35&fg=fff",
+				description: "Eine Dokumentation über die Vielfalt und Schönheit unseres Planeten.",
+				director: "Alastair Fothergill",
+				rating_count: 56000,
+				runtime: "11 Stunden",
+				videoUrl: "https://www.youtube.com/embed/example1",
+				tagline: "Der Planet, wie du ihn noch nie gesehen hast"
+			},
+			{
+				id: 202,
+				title: "Our Planet",
+				year: 2019,
+				category: "nature",
+				rating: 9.3,
+				image: "https://via.placeholder.com/180x270?text=Our+Planet&bg=ffb84d&fg=000",
+				description: "Eine umfangreiche Serie über Tiere und Ökosysteme weltweit.",
+				director: "Various",
+				rating_count: 48000,
+				runtime: "8 Stunden",
+				videoUrl: "https://www.youtube.com/embed/example2",
+				tagline: "Der Zustand unserer Erde"
+			},
+			{
+				id: 203,
+				title: "The History of Rome",
+				year: 2020,
+				category: "history",
+				rating: 8.8,
+				image: "https://via.placeholder.com/180x270?text=Rome&bg=ff6b35&fg=fff",
+				description: "Eine epische Dokumentation über das Römische Reich.",
+				director: "Various",
+				rating_count: 38000,
+				runtime: "10 Stunden",
+				videoUrl: "https://www.youtube.com/embed/example3",
+				tagline: "Das mächtigste Reich der Antike"
+			},
+			{
+				id: 204,
+				title: "Cosmos: A Spacetime Odyssey",
+				year: 2014,
+				category: "science",
+				rating: 9.3,
+				image: "https://via.placeholder.com/180x270?text=Cosmos&bg=ffb84d&fg=000",
+				description: "Neil deGrasse Tyson erklärt die Wissenschaft des Universums.",
+				director: "Various",
+				rating_count: 52000,
+				runtime: "13 Stunden",
+				videoUrl: "https://www.youtube.com/embed/example4",
+				tagline: "Reise durch das Universum"
+			},
+			{
+				id: 205,
+				title: "Making a Murderer",
+				year: 2015,
+				category: "crime",
+				rating: 8.9,
+				image: "https://via.placeholder.com/180x270?text=Making+Murderer&bg=ff6b35&fg=fff",
+				description: "Eine fesselnde Dokumentation über einen umstrittenen Mordfall.",
+				director: "Laura Ricciardi, Moira Demos",
+				rating_count: 42000,
+				runtime: "10 Stunden",
+				videoUrl: "https://www.youtube.com/embed/example5",
+				tagline: "Gerechtigkeit oder Ungerechtigkeit?"
+			},
+			{
+				id: 206,
+				title: "The Social Network Dilemma",
+				year: 2020,
+				category: "technology",
+				rating: 8.6,
+				image: "https://via.placeholder.com/180x270?text=Social+Network&bg=ffb84d&fg=000",
+				description: "Wie die Technologie unser Leben verändert hat.",
+				director: "Jeff Orlowski",
+				rating_count: 35000,
+				runtime: "1 Stunde 34 Minuten",
+				videoUrl: "https://www.youtube.com/embed/example6",
+				tagline: "Das Geschäft hinter deinen Daten"
+			}
+		];
+
+		// DOM Elements
+		const docsGrid = document.getElementById('docsGrid');
+		const categoryFilter = document.getElementById('categoryFilter');
+		const sortFilter = document.getElementById('sortFilter');
+		const searchInput = document.getElementById('searchInput');
+		const movieModal = document.getElementById('movieModal');
+		const playerModal = document.getElementById('playerModal');
+		const modalClose = document.querySelectorAll('.modal-close');
+
+		let filteredDocs = [...DOCS_DATA];
+
+		// Initialize
+		document.addEventListener('DOMContentLoaded', () => {
+			renderDocs(filteredDocs);
+			updateSidebar();
+			setupEventListeners();
+		});
+
+		// Event Listeners
+		function setupEventListeners() {
+			categoryFilter.addEventListener('change', applyFilters);
+			sortFilter.addEventListener('change', applySort);
+			searchInput.addEventListener('input', handleSearch);
+
+			modalClose.forEach(btn => {
+				btn.addEventListener('click', closeModal);
+			});
+
+			document.addEventListener('click', (e) => {
+				if (e.target.id === 'movieModal' || e.target.id === 'playerModal') {
+					closeModal();
+				}
+			});
+
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') closeModal();
+			});
+		}
+
+		// Render Docs
+		function renderDocs(docs) {
+			docsGrid.innerHTML = '';
+
+			if (docs.length === 0) {
+				docsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #a0a0a0; padding: 60px;">🔍 Keine Dokumentationen gefunden</div>`;
+				return;
+			}
+
+			docs.forEach(doc => {
+				const card = document.createElement('div');
+				card.className = 'movie-card';
+				card.innerHTML = `
+					<div class="movie-poster">
+						<img src="${doc.image}" alt="${doc.title}">
+						<div class="movie-overlay">
+							<button class="btn-play" onclick="playDoc(${doc.id}); return false;">
+								<span class="fal fa-play"></span> Ansehen
+							</button>
+						</div>
+						<div class="movie-year-badge">${doc.year}</div>
+					</div>
+					<div class="movie-info">
+						<div class="movie-title">${doc.title}</div>
+						<div class="movie-rating" style="color: #ffb84d;">⭐ ${doc.rating}</div>
+						<div class="movie-meta">
+							<span class="movie-genre">${doc.category.charAt(0).toUpperCase() + doc.category.slice(1)}</span>
+						</div>
+					</div>
+				`;
+
+				card.addEventListener('click', (e) => {
+					if (!e.target.closest('.btn-play')) {
+						showDocDetails(doc.id);
+					}
+				});
+
+				docsGrid.appendChild(card);
+			});
+		}
+
+		// Show Doc Details
+		function showDocDetails(id) {
+			const doc = DOCS_DATA.find(d => d.id === id);
+			if (!doc) return;
+
+			const modalBody = document.getElementById('modalBody');
+			modalBody.innerHTML = `
+				<div class="modal-header">
+					<div class="modal-poster">
+						<img src="${doc.image}" alt="${doc.title}">
+					</div>
+					<div class="modal-info">
+						<h2 class="modal-title">${doc.title}</h2>
+						<p class="modal-tagline">"${doc.tagline}"</p>
+						<div class="modal-meta">
+							<span>📅 ${doc.year}</span>
+							<span>⭐ ${doc.rating}</span>
+							<span>⏱️ ${doc.runtime}</span>
+						</div>
+						<p style="color: #a0a0a0; font-size: 12px; margin-bottom: 15px; margin-top: 10px;">
+							<strong>Regie:</strong> ${doc.director}
+						</p>
+						<p class="modal-description">${doc.description}</p>
+						<div class="modal-buttons">
+							<button class="btn-play" onclick="playDoc(${doc.id}); return false;">
+								<span class="fal fa-play"></span> Jetzt ansehen
+							</button>
+						</div>
+					</div>
+				</div>
+			`;
+
+			movieModal.classList.add('active');
+		}
+
+		// Play Doc
+		function playDoc(id) {
+			const doc = DOCS_DATA.find(d => d.id === id);
+			if (!doc) return;
+
+			document.getElementById('playerTitle').textContent = doc.title;
+			document.getElementById('playerDescription').textContent = doc.description;
+
+			const playerContainer = document.getElementById('playerContainer');
+			playerContainer.innerHTML = `
+				<iframe src="${doc.videoUrl}" 
+					width="100%" height="600" allow="autoplay; encrypted-media" 
+					frameborder="0" allowfullscreen style="border-radius: 8px;">
+				</iframe>
+			`;
+
+			playerModal.classList.add('active');
+			movieModal.classList.remove('active');
+		}
+
+		// Filter & Sort
+		function applyFilters() {
+			const category = categoryFilter.value.toLowerCase();
+			filteredDocs = DOCS_DATA.filter(d =>
+				!category || d.category === category
+			);
+			applySort();
+		}
+
+		function applySort() {
+			const sortBy = sortFilter.value || 'trending';
+			let sorted = [...filteredDocs];
+
+			if (sortBy === 'rating') {
+				sorted.sort((a, b) => b.rating - a.rating);
+			} else if (sortBy === 'newest') {
+				sorted.sort((a, b) => b.year - a.year);
+			} else if (sortBy === 'az') {
+				sorted.sort((a, b) => a.title.localeCompare(b.title));
+			} else {
+				sorted.sort((a, b) => b.rating_count - a.rating_count);
+			}
+
+			renderDocs(sorted);
+		}
+
+		// Search
+		function handleSearch(e) {
+			const query = e.target.value.toLowerCase();
+			if (query === '') {
+				applyFilters();
+				return;
+			}
+
+			filteredDocs = DOCS_DATA.filter(d =>
+				d.title.toLowerCase().includes(query) ||
+				d.director.toLowerCase().includes(query) ||
+				d.description.toLowerCase().includes(query)
+			);
+
+			applySort();
+		}
+
+		// Update Sidebar
+		function updateSidebar() {
+			const topDocs = [...DOCS_DATA].sort((a, b) => b.rating - a.rating).slice(0, 8);
+			document.getElementById('topDocs').innerHTML = topDocs.map(d =>
+				`<li><a href="#" onclick="showDocDetails(${d.id}); return false;">
+					${d.title} <span style="float: right; color: #ffb84d;">⭐${d.rating}</span>
+				</a></li>`
+			).join('');
+		}
+
+		// Close Modals
+		function closeModal() {
+			movieModal.classList.remove('active');
+			playerModal.classList.remove('active');
+		}
+	</script>
+</body>
+</html>

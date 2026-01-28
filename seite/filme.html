@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<title>Alle Filme - MEGAKino Streaming</title>
+	<meta name="description" content="Alle verfügbaren Filme auf MEGAKino. Blockbuster, Klassiker und Neuerscheinungen in HD.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#ff6b35">
+	<link rel="shortcut icon" href="/templates/popcornie-dark/images/favicon.svg">
+	<link href="/templates/popcornie-dark/css/common.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/styles.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/engine.css" type="text/css" rel="stylesheet">
+	<link href="/templates/popcornie-dark/css/fontawesome.css" type="text/css" rel="stylesheet">
+	<link href="/css/megakino.css" type="text/css" rel="stylesheet">
+	<style>
+		:root {
+			--accent: #ff6b35;
+			--accent-2: #ffb84d;
+			--accent-dark: #e55a2b;
+			--bg: #0a0a0a;
+			--bg-2: #1a1a1a;
+			--bg-3: #2d2d2d;
+			--bg-4: #3a3a3a;
+			--tt-dark: #e0e0e0;
+			--tt-2: #a0a0a0;
+			--tt-light: #707070;
+			--bdc-dark: #4a4a4a;
+			--gradient: linear-gradient(90deg, #ff6b35 0%, #ffb84d 100%);
+			--max-width: 1200px;
+			--indent: 30px;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font-family: 'Manrope', sans-serif; background: #0a0a0a; color: #e0e0e0; }
+		a { color: inherit; text-decoration: none; transition: 0.3s; }
+		a:hover { color: #ff6b35; }
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="wrapper-container wrapper-main d-flex fd-column">
+			<!-- HEADER -->
+			<header class="header d-flex ai-center vw100">
+				<a href="/megakino.html" class="logo header__logo">
+					<div class="logo__title">MEGAKino</div>
+					<p class="logo__caption">Filme & Serien Streaming</p>
+				</a>
+				<ul class="header__menu d-flex flex-grow-1">
+					<li><a href="/"><span class="fal fa-home"></span>Home</a></li>
+					<li><a href="/filme.html" class="active"><span class="fal fa-fire-alt"></span>Alle Filme</a></li>
+					<li><a href="/serien.html"><span class="fal fa-play"></span>Serien</a></li>
+					<li><a href="/dokumentation.html"><span class="fal fa-tv-retro"></span>Dokus</a></li>
+					<li><a href="/watchlist.html"><span class="fal fa-bookmark"></span>Watchlist</a></li>
+				</ul>
+				<div class="header__search-box">
+					<input type="text" id="searchInput" placeholder="Film suchen...">
+					<button class="btn-icon"><span class="fal fa-search"></span></button>
+				</div>
+			</header>
+
+			<!-- CONTENT -->
+			<div class="content flex-grow-1 cols d-flex">
+				<div class="col-main">
+					<!-- PAGE TITLE -->
+					<section class="page-header">
+						<h1>🎬 Alle Filme</h1>
+						<p>Entdecke unseren riesigen Katalog an Blockbustern und Klassikern</p>
+					</section>
+
+					<!-- FILTER & SORT -->
+					<section class="filter-section">
+						<div class="filter-group">
+							<select id="genreFilter" class="filter-select">
+								<option value="">Alle Genres</option>
+								<option value="action">🔫 Action</option>
+								<option value="drama">🎭 Drama</option>
+								<option value="comedy">😂 Komödie</option>
+								<option value="horror">👻 Horror</option>
+								<option value="scifi">🚀 Sci-Fi</option>
+								<option value="romance">💕 Romantik</option>
+								<option value="thriller">😨 Thriller</option>
+								<option value="fantasy">🪄 Fantasy</option>
+								<option value="adventure">🗺️ Abenteuer</option>
+								<option value="animation">🎨 Animation</option>
+							</select>
+							<select id="yearFilter" class="filter-select">
+								<option value="">Alle Jahre</option>
+								<option value="2024">2024 - Neu</option>
+								<option value="2023">2023</option>
+								<option value="2022">2022</option>
+								<option value="2020">2020er</option>
+								<option value="2010">2010er</option>
+								<option value="2000">2000er</option>
+								<option value="1990">1990er</option>
+							</select>
+							<select id="ratingFilter" class="filter-select">
+								<option value="">Alle Bewertungen</option>
+								<option value="9">9+ ⭐ Exzellent</option>
+								<option value="8">8+ ⭐ Sehr gut</option>
+								<option value="7">7+ ⭐ Gut</option>
+								<option value="6">6+ ⭐ OK</option>
+							</select>
+							<select id="sortFilter" class="filter-select">
+								<option value="trending">Trending</option>
+								<option value="newest">Neuste zuerst</option>
+								<option value="rating">Nach Bewertung</option>
+								<option value="az">A - Z</option>
+							</select>
+						</div>
+					</section>
+
+					<!-- MOVIE GRID -->
+					<section class="content-section">
+						<div class="movie-grid" id="moviesGrid">
+							<!-- DYNAMISCH GEFÜLLT -->
+						</div>
+					</section>
+				</div>
+
+				<!-- SIDEBAR -->
+				<aside class="col-side">
+					<div class="widget">
+						<h3>🔥 Trending Heute</h3>
+						<ul class="top-list" id="trendingToday">
+							<!-- DYNAMISCH GEFÜLLT -->
+						</ul>
+					</div>
+					<div class="widget">
+						<h3>📊 Top 10 Filme</h3>
+						<ul class="top-list" id="topRated">
+							<!-- DYNAMISCH GEFÜLLT -->
+						</ul>
+					</div>
+					<div class="widget">
+						<h3>⏰ Zuletzt angesehen</h3>
+						<ul class="watch-history" id="watchHistory">
+							<li class="empty-state">Noch nichts angesehen</li>
+						</ul>
+					</div>
+				</aside>
+			</div>
+
+			<!-- FOOTER -->
+			<footer class="footer">
+				<p>&copy; 2026 MEGAKino. Alle Inhalte für Unterhaltungszwecke. | <a href="#privacy">Datenschutz</a> | <a href="#terms">Nutzungsbedingungen</a></p>
+			</footer>
+		</div>
+	</div>
+
+	<!-- MODAL: FILM DETAILS -->
+	<div id="movieModal" class="modal">
+		<div class="modal-content">
+			<button class="modal-close">&times;</button>
+			<div class="modal-body" id="modalBody">
+				<!-- DYNAMISCH GEFÜLLT -->
+			</div>
+		</div>
+	</div>
+
+	<!-- MODAL: VIDEO PLAYER -->
+	<div id="playerModal" class="modal">
+		<div class="modal-player">
+			<button class="modal-close">&times;</button>
+			<div class="player-container" id="playerContainer">
+				<!-- DYNAMISCH GEFÜLLT -->
+			</div>
+			<div class="player-controls">
+				<h3 id="playerTitle"></h3>
+				<p id="playerDescription"></p>
+			</div>
+		</div>
+	</div>
+
+	<script src="/js/megakino-db.js"></script>
+	<script src="/js/filme.js"></script>
+</body>
+</html>
